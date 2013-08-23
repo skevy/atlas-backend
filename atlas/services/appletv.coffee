@@ -150,14 +150,6 @@ class AppleTVService
 
     app.get '/control/:command', @controlHandler
 
-    # app.get '/control/select', @controlHandler
-    # app.get '/control/menu', @controlHandler
-
-    # app.get '/control/direction/up', @controlHandler
-    # app.get '/control/direction/down', @controlHandler
-    # app.get '/control/direction/left', @controlHandler
-    # app.get '/control/direction/right', @controlHandler
-
   start: ->
     # console.log "Broadcasting iTunes Service"
     # @adv.start()
