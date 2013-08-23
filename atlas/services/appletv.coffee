@@ -7,53 +7,51 @@ async = require 'async'
 PROMPT_ID = 1
 SESSION_ID = 0
 
-upBuffers = [
-  new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchDown&time=0&point=20,275"),
-  new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=1&point=20,270"),
-  new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=2&point=20,265"),
-  new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=3&point=20,260"),
-  new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=4&point=20,255"),
-  new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=5&point=20,250"),
-  new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1BtouchUp&time=6&point=20,250")
-]
 
-downBuffers = [
-  new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchDown&time=0&point=20,250"),
-  new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=1&point=20,255"),
-  new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=2&point=20,260"),
-  new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=3&point=20,265"),
-  new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=4&point=20,270"),     
-  new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=5&point=20,275"),
-  new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1BtouchUp&time=6&point=20,275")
-]
-
-leftBuffers = [
-  new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1EtouchDown&time=0&point=75,100"),
-  new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=1&point=70,100"),
-  new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=3&point=65,100"),
-  new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=4&point=60,100"),
-  new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=5&point=55,100"),
-  new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=6&point=50,100"),
-  new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1BtouchUp&time=7&point=50,100")
-]
-
-rightBuffers = [
-  new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchDown&time=0&point=50,100"),
-  new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=1&point=55,100"),
-  new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=3&point=60,100"),
-  new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=4&point=65,100"),
-  new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=5&point=70,100"),
-  new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=6&point=75,100"),
-  new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1BtouchUp&time=7&point=75,100")
-]
-
-menuBuffers = [
-  new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x04menu")
-]
-
-selectBuffers = [
-  new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x06select")
-]
+cmdBufferMap = {
+  'up': [
+    new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchDown&time=0&point=20,275"),
+    new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=1&point=20,270"),
+    new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=2&point=20,265"),
+    new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=3&point=20,260"),
+    new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=4&point=20,255"),
+    new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=5&point=20,250"),
+    new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1BtouchUp&time=6&point=20,250")
+  ],
+  'down': [
+    new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchDown&time=0&point=20,250"),
+    new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=1&point=20,255"),
+    new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=2&point=20,260"),
+    new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=3&point=20,265"),
+    new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=4&point=20,270"),     
+    new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=5&point=20,275"),
+    new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1BtouchUp&time=6&point=20,275")
+  ],
+  'left': [
+    new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1EtouchDown&time=0&point=75,100"),
+    new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=1&point=70,100"),
+    new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=3&point=65,100"),
+    new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=4&point=60,100"),
+    new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=5&point=55,100"),
+    new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=6&point=50,100"),
+    new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1BtouchUp&time=7&point=50,100")
+  ],
+  'right': [
+    new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchDown&time=0&point=50,100"),
+    new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=1&point=55,100"),
+    new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=3&point=60,100"),
+    new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=4&point=65,100"),
+    new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=5&point=70,100"),
+    new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1DtouchMove&time=6&point=75,100"),
+    new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x1BtouchUp&time=7&point=75,100")
+  ],
+  'menu': [
+    new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x04menu")
+  ],
+  'select': [
+    new Buffer("cmcc\x00\x00\x00\x01\x30cmbe\x00\x00\x00\x06select")
+  ]
+}
 
 
 ###
@@ -150,13 +148,15 @@ class AppleTVService
     app.get '/login', @login
     # app.get '/pair', @pair
 
-    app.get '/control/select', @select
-    app.get '/control/menu', @menu
+    app.get '/control/:command', @controlHandler
 
-    app.get '/control/direction/up', @up
-    app.get '/control/direction/down', @down
-    app.get '/control/direction/left', @left
-    app.get '/control/direction/right', @right
+    # app.get '/control/select', @controlHandler
+    # app.get '/control/menu', @controlHandler
+
+    # app.get '/control/direction/up', @controlHandler
+    # app.get '/control/direction/down', @controlHandler
+    # app.get '/control/direction/left', @controlHandler
+    # app.get '/control/direction/right', @controlHandler
 
   start: ->
     # console.log "Broadcasting iTunes Service"
@@ -202,23 +202,8 @@ class AppleTVService
 
     resp.send "DONE"
 
-  up: (req, resp) =>
-    @sendBuffers upBuffers, req, resp
-
-  down: (req, resp) =>
-    @sendBuffers downBuffers, req, resp
-
-  left: (req, resp) =>
-    @sendBuffers leftBuffers, req, resp
-
-  right: (req, resp) =>
-    @sendBuffers rightBuffers, req, resp
-
-  select: (req, resp) =>
-    @sendBuffers selectBuffers, req, resp
-
-  menu: (req, resp) =>
-    @sendBuffers menuBuffers, req, resp
+  controlHandler: (req, resp)=>
+    @sendBuffers cmdBufferMap[req.params.command], req, resp
 
   login: (req, resp) =>
     request
