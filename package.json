@@ -1,0 +1,18 @@
+{
+  "name": "atlas",
+  "version": "0.1.0",
+  "description": "Whole Home Control",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "BSD",
+  "dependencies": {
+    "mdns": "https://github.com/agnat/node_mdns/tarball/master",
+    "express": "~3.3.5",
+    "jspack": "0.0.1",
+    "request": "~2.27.0",
+    "async": "~0.2.9"
+  }
+}
